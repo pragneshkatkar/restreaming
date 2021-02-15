@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://vjs.zencdn.net/7.10.2/video-js.css" rel="stylesheet" />
+    <script src='/socket.io/socket.io.js'></script>
+    <!-- <script type="module" src='assets/js/rtc.js'></script> -->
+    <!-- <script type="module" src='assets/js/events.js'></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/7.3.0/adapter.min.js" integrity="sha256-2qQheewaqnZlXJ3RJRghVUwD/3fD9HNqxh4C+zvgmF4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+</head>
+<body>
+    <section class="create-meeting">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4">
+                    <h3>Join meeting</h3>
+                    <form id="enter-room">
+                        <label>Your name</label>
+                        <input type="text" id="username" placeholder="Your name"/>
+                        <button type="submit">Join meeting</button>
+                    </form>
+                    <div id="room-created"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        document.getElementById('enter-room').addEventListener('submit', (e)=>{
+        e.preventDefault();
+
+        let name = document.querySelector('#username').value;
+        // let name = 'test';
+
+        if(name){
+            //remove error message, if any
+            // document.querySelector('#err-msg-username').innerHTML = "";
+
+            //save the user's name in sessionStorage
+            sessionStorage.setItem('username', name);
+            var url = window.location.href;
+            var room = url.split("room=");
+            room = room[1];
+
+            //reload room
+            window.location.href = "/?room=" + room;
+        }
+
+        else{
+            document.querySelector('#err-msg-username').innerHTML = "Please input your name";
+        }
+    });
+    </script>
+</body>
+</html>
