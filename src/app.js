@@ -19,5 +19,5 @@ app.get('/join-meeting', (req, res)=>{
 
 
 io.of('/stream').on('connection', stream);
-
-server.listen(3000);
+let port = process.env.PORT || 3000;
+server.listen(port);
