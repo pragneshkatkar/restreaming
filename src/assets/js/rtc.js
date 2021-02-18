@@ -214,7 +214,7 @@ window.addEventListener('load', () => {
                     div.appendChild(namediv);
 
                     let adddiv = document.createElement('div');
-                    adddiv.className = 'add-div d-flex align-items-center justify-content-center';
+                    adddiv.className = 'add-div align-items-center justify-content-center';
                     div.appendChild(adddiv);
 
                     let addbutton = document.createElement('button');
@@ -345,4 +345,55 @@ window.addEventListener('load', () => {
         }
         myStream.getVideoTracks()[0].enabled = !(myStream.getVideoTracks()[0].enabled);
     });
+    document.getElementById("screen-share").addEventListener('click', function() {
+        if(navigator.getDisplayMedia) {
+            navigator.getDisplayMedia({video: true}).then(screenStream => {
+                afterScreenCaptured(screenStream);
+            });
+        }
+        else if(navigator.mediaDevices.getDisplayMedia) {
+            navigator.mediaDevices.getDisplayMedia({video: true}).then(screenStream => {
+                afterScreenCaptured(screenStream);
+            });
+        }
+        else {
+            alert('getDisplayMedia API is not supported by this browser.');
+        }
+    });
+    function afterScreenCaptured(screenStream) {
+        navigator.mediaDevices.getUserMedia({
+            video: true
+        }).then(function(cameraStream) {
+            screenStream.fullcanvas = true;
+            screenStream.width = screen.width; // or 3840
+            screenStream.height = screen.height; // or 2160 
+
+            cameraStream.width = parseInt((30 / 100) * screenStream.width);
+            cameraStream.height = parseInt((30 / 100) * screenStream.height);
+            cameraStream.top = screenStream.height - cameraStream.height;
+            cameraStream.left = screenStream.width - cameraStream.width;
+
+            // fullCanvasRenderHandler(screenStream, 'Your Screen!');
+            // normalVideoRenderHandler(cameraStream, 'Your Camera!');
+
+            let mixer = new MultiStreamsMixer([screenStream, cameraStream]);
+
+            mixer.frameInterval = 1;
+            mixer.startDrawingFrames();
+
+            document.getElementById("main-video").srcObject = mixer.getMixedStream();
+
+            // updateMediaHTML('Mixed Screen+Camera!');
+
+            addStreamStopListener(screenStream, function() {
+                mixer.releaseStreams();
+                videoPreview.pause();
+                videoPreview.src = null;
+
+                cameraStream.getTracks().forEach(function(track) {
+                    track.stop();
+                });
+            });
+        });
+    }
 });

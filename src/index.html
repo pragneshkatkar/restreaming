@@ -187,6 +187,9 @@
             left:0%;
             background-color:rgba(255, 255, 255, 0.6);
         }
+        .videos:hover .add-div{
+            display:flex;
+        }
         .add-button{
             padding:5px;
             font-size:10px;
@@ -266,6 +269,7 @@
                 <div id="videos" class="act-videos">
                     <div class="videos">
                         <video muted id="local-video" style="width:100%;border-radius:5px 5px 0px 0px;" autoplay></video>
+                        <p style="padding:2px 5px;background-color:white;font-size:10px;border-radius:0px 0px 5px 5px;">You</p>
                     </div>
                 </div>
             </div>
@@ -283,7 +287,7 @@
                         <i class="material-icons">settings</i>
                         <p>cam/mic</p>
                     </div>
-                    <div class="bottom-action-bar-element">
+                    <div id="screen-share" class="bottom-action-bar-element">
                         <i class="material-icons">screen_share</i>
                         <p>Share</p>
                     </div>
