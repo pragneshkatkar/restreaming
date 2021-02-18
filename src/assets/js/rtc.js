@@ -31,6 +31,7 @@ window.addEventListener('load', () => {
         var myStream = '';
         var strs = [];
         var str = [];
+        let tempusername;
         
 
         socket.on('connect', () => {
@@ -44,10 +45,6 @@ window.addEventListener('load', () => {
                 username: username
             });
 
-            socket.emit('getusername', {
-                room: room,
-                username: username
-            });
 
 
             socket.on('new user', (data) => {
@@ -112,7 +109,10 @@ window.addEventListener('load', () => {
                 mixer.startDrawingFrames();
 
                 document.getElementById("main-video_html5_api").srcObject = mixer.getMixedStream();
-            })
+            });
+            socket.on('getusername', (data) => {
+                tempusername = data.username;
+            });
         });
 
 
@@ -171,21 +171,20 @@ window.addEventListener('load', () => {
 
 
 
-            let tempusername;
-            socket.on('getusername', (data) => {
-                tempusername = data.username;
-            });
             //add
             pc[partnerName].ontrack = (e) => {
                 let str = e.streams[0];
                 console.log(e);
+                let partnerNameArr = partnerName.split('____');
+                tempusername = partnerNameArr[partnerNameArr.length - 1];
                 if (document.getElementById(`${partnerName}-video`)) {
-                    alert('if'+partnerName);
+                    // alert('if'+partnerName);
                     document.getElementById(`${partnerName}-video`).srcObject = str;
+                    document.getElementById(`${partnerName}-p`).textContent = tempusername;
                 }
 
                 else {
-                    alert('else'+partnerName);
+                    // alert('else'+partnerName);
                     //video elem
                     let newVid = document.createElement('video');
                     newVid.id = `${partnerName}-video`;
@@ -206,6 +205,7 @@ window.addEventListener('load', () => {
                     div.appendChild(newVid);
 
                     let namediv = document.createElement('div');
+                    namediv.id = `${partnerName}-p`;
                     namediv.style.padding = '2px 5px';
                     namediv.style.borderRadius = '0px 0px 5px 5px';
                     namediv.style.backgroundColor = 'white';
