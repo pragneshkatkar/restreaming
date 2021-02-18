@@ -34,6 +34,10 @@ const stream = (socket)=>{
         socket.to(data.room).emit('chat', {sender: data.sender, msg: data.msg});
     });
 
+    socket.on('getusername', (data) => {
+        socket.to(data.room).emit('getusername', {username: data.username})
+    })
+
     socket.on('video_change', (data) => {
         console.log(data.streamArray);
         socket.to(data.room).emit('video_change', {streamArray: data.streamArray})

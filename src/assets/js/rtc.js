@@ -30,6 +30,8 @@ window.addEventListener('load', () => {
         var socketId = '';
         var myStream = '';
         var strs = [];
+        var str = [];
+        
 
         socket.on('connect', () => {
             //set socketId
@@ -39,6 +41,11 @@ window.addEventListener('load', () => {
             socket.emit('subscribe', {
                 room: room,
                 socketId: socketId,
+                username: username
+            });
+
+            socket.emit('getusername', {
+                room: room,
                 username: username
             });
 
@@ -76,6 +83,7 @@ window.addEventListener('load', () => {
                         stream.getTracks().forEach((track) => {
                             pc[data.sender].addTrack(track, stream);
                         });
+                        console.log(pc[data.sender]);
 
                         let answer = await pc[data.sender].createAnswer();
 
@@ -99,11 +107,11 @@ window.addEventListener('load', () => {
 
             socket.on('video_change', (data) => {
                 console.log(data.streamArray);
-                let mixer = new MultiStreamsMixer(MediaStream.webkitGetTrackById(data.streamArray));
+                let mixer = new MultiStreamsMixer(MediaStream.getTrackById(data.streamArray));
                 mixer.frameInterval = 1;
                 mixer.startDrawingFrames();
 
-                document.getElementById("main-video").srcObject = mixer.getMixedStream();
+                document.getElementById("main-video_html5_api").srcObject = mixer.getMixedStream();
             })
         });
 
@@ -163,15 +171,21 @@ window.addEventListener('load', () => {
 
 
 
+            let tempusername;
+            socket.on('getusername', (data) => {
+                tempusername = data.username;
+            });
             //add
             pc[partnerName].ontrack = (e) => {
                 let str = e.streams[0];
-                console.log(e.streams);
+                console.log(e);
                 if (document.getElementById(`${partnerName}-video`)) {
+                    alert('if'+partnerName);
                     document.getElementById(`${partnerName}-video`).srcObject = str;
                 }
 
                 else {
+                    alert('else'+partnerName);
                     //video elem
                     let newVid = document.createElement('video');
                     newVid.id = `${partnerName}-video`;
@@ -196,7 +210,7 @@ window.addEventListener('load', () => {
                     namediv.style.borderRadius = '0px 0px 5px 5px';
                     namediv.style.backgroundColor = 'white';
                     namediv.style.fontSize = '10px';
-                    namediv.textContent = username;
+                    namediv.textContent = tempusername;
                     div.appendChild(namediv);
 
                     let adddiv = document.createElement('div');
@@ -230,16 +244,15 @@ window.addEventListener('load', () => {
             });
             function addtomain(stream){
                 console.log(stream);
+                strs.push(stream);
                 let mixer = new MultiStreamsMixer(strs);
                 mixer.frameInterval = 1;
                 mixer.startDrawingFrames();
                 let mixedStream = mixer.getMixedStream();
                 document.getElementById("main-video").srcObject = mixedStream;
-                console.log(mixedStream.id);
-                strs.push(mixedStream.id);
                 let data = {
                     room: room,
-                    streamArray: strs
+                    streamArray: str
                 };
                 // console.log(MediaStream.getTrackById(mixer.getMixedStream().id));
                 socket.emit('video_change', data);
