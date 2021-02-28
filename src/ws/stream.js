@@ -1,4 +1,8 @@
 const stream = (socket)=>{
+
+	let rtmpDestination;
+	let ffmpeg_process;
+	const spawn = require('child_process').spawn;
     socket.on('subscribe', (data)=>{
         //subscribe/join a room
         // console.log(socket)
@@ -43,17 +47,8 @@ const stream = (socket)=>{
         socket.to(data.room).emit('video_change', {streamArray: data.streamArray})
     })
     socket.on('config_rtmpDestination',function(m){
-		// if(typeof m != 'string'){
-		// 	socket.emit('fatal','rtmp destination setup error.');
-		// 	return;
-		// }
-		// var regexValidator=/^rtmp:\/\/[^\s]*$/;//TODO: should read config
-		// if(!regexValidator.test(m)){
-		// 	socket.emit('fatal','rtmp address rejected.');
-		// 	return;
-		// }
-		socket._rtmpDestination=m;
-		// socket.emit('message','rtmp destination set to:'+m);
+		console.log(m);
+		rtmpDestination = m;
 	});
 	socket.on('start',function(m){
 		// if(ffmpeg_process || feedStream){
@@ -67,7 +62,7 @@ const stream = (socket)=>{
 		// }
 		
 		var framerate = socket.handshake.query.framespersecond;
-		var audioBitrate = parseInt(socket.handshake.query.audioBitrate);
+		var audioBitrate = 44100;
 	    var audioEncoding = "64k";
 		if (audioBitrate ==11025){
 			audioEncoding = "11k";
@@ -89,7 +84,7 @@ const stream = (socket)=>{
 					'-x264opts', 'keyint=2', '-crf', '25', '-pix_fmt', 'yuv420p',
 			        '-profile:v', 'baseline', '-level', '3', 
      				'-c:a', 'aac', '-b:a', audioEncoding, '-ar', audioBitrate, 
-			        '-f', 'flv', socket._rtmpDestination		
+			        '-f', 'flv', rtmpDestination		
 			];
 			
 		}else if (framerate == 15){
@@ -102,7 +97,7 @@ const stream = (socket)=>{
 					'-x264opts', 'keyint=30', '-crf', '25', '-pix_fmt', 'yuv420p',
 			        '-profile:v', 'baseline', '-level', '3', 
      				'-c:a', 'aac', '-b:a',audioEncoding, '-ar', audioBitrate, 
-			        '-f', 'flv', socket._rtmpDestination		
+			        '-f', 'flv', rtmpDestination		
 			];
 			
 		}else{
@@ -119,7 +114,7 @@ const stream = (socket)=>{
 			//'-strict', 'experimental', 
 			'-bufsize', '5000',
 			
-			'-f', 'flv', socket._rtmpDestination
+			'-f', 'flv', rtmpDestination
 			/*. original params
 			'-i','-',
 			'-c:v', 'libx264', '-preset', 'veryfast', '-tune', 'zerolatency',  // video codec config: low latency, adaptive bitrate
@@ -135,30 +130,14 @@ const stream = (socket)=>{
 			
 		];
 	}
-	console.log("ops", ops);
-		console.log(socket._rtmpDestination);
+		console.log(rtmpDestination);
 		ffmpeg_process=spawn('ffmpeg', ops);
-		console.log("ffmpeg spawned");
-		feedStream=function(data){
 			
-			ffmpeg_process.stdin.write(data);
-			//write exception cannot be caught here.	
-		}
-
-		ffmpeg_process.stderr.on('data',function(d){
-			socket.emit('ffmpeg_stderr',''+d);
-		});
-		ffmpeg_process.on('error',function(e){
-			console.log('child process error'+e);
-			socket.emit('fatal','ffmpeg error!'+e);
-			feedStream=false;
-			socket.disconnect();
-		});
-		ffmpeg_process.on('exit',function(e){
-			console.log('child process exit'+e);
-			socket.emit('fatal','ffmpeg exit!'+e);
-			socket.disconnect();
-		});
+		// ffmpeg_process.stdin.write(data);
+			//write exception cannot be caught here.
+	});
+	socket.on('binarystream',function(m){
+		ffmpeg_process.stdin.write(m);
 	});
 }
 
