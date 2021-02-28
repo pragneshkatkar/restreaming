@@ -4,14 +4,19 @@
   "description": "A conference call implementation using WebRTC, Socket.io and Node.js.",
   "main": "src/app.js",
   "dependencies": {
+    "child-process": "^1.0.2",
+    "exec": "^0.2.1",
     "express": "^4.17.1",
-    "socket.io": "^2.3.0",
-    "videojs": "^1.0.0",
+    "ffmpeg-stream": "^0.7.0",
+    "fluent-ffmpeg": "^2.1.2",
+    "fs": "0.0.1-security",
+    "routes": "^2.1.0",
+    "socket.io": "^2.4.1",
+    "spawn-npm-install": "^1.2.0",
     "videojs-watermark": "^2.0.0",
     "webrtc-adapter": "^7.7.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.7",
     "video.js": "^7.11.4"
   },
   "scripts": {

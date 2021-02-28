@@ -7,6 +7,7 @@ import h from './helpers.js';
 window.addEventListener('load', () => {
     const room = h.getQString(location.href, 'room');
     const username = sessionStorage.getItem('username');
+    let mixedStream;
 
     if (!room) {
         window.location.href = "/create-meeting";
@@ -248,7 +249,7 @@ window.addEventListener('load', () => {
                 let mixer = new MultiStreamsMixer(strs);
                 mixer.frameInterval = 1;
                 mixer.startDrawingFrames();
-                let mixedStream = mixer.getMixedStream();
+                mixedStream = mixer.getMixedStream();
                 document.getElementById("main-video").srcObject = mixedStream;
                 let data = {
                     room: room,
@@ -396,4 +397,88 @@ window.addEventListener('load', () => {
             });
         });
     }
+    // var options = {
+    //     mimeType: 'video/webm'
+    // }
+    // var recorder = new MultiStreamRecorder(strs, options);
+    // document.getElementById("record").addEventListener('click', function(){
+    //     alert('record');
+    //     recorder.record();
+    //     (function looper() {
+    //         if(!recorder) {
+    //             return;
+    //         }
+
+    //         // var internal = recorder.getInternalRecorder();
+    //         if(recorder && recorder.getArrayOfBlobs) {
+    //             var blob = new Blob(recorder.getArrayOfBlobs(), {
+    //                 type: 'video/webm'
+    //             });
+    //             document.getElementById("output-video").src = URL.createObjectURL(blob);
+
+    //             // document.querySelector('h1').innerHTML = 'Recording length: ' + bytesToSize(blob.size);
+    //         }
+
+    //         setTimeout(looper, 1000);
+    //     })();
+
+    // });
+    // document.getElementById("stop").addEventListener('click', function(){
+    //     alert('saved');
+    //     recorder.stop(function(blob) {
+    //         document.getElementById("output-video").src = URL.createObjectURL(blob);
+        
+    //         // or
+    //         var blob = recorder.blob;
+    //     });
+    // });
+
+    // var cmd = 'C:/user/pragn/ffmpeg/ffmpeg/bin/ffmpeg';
+    
+    // var args = [
+    //     '-y', 
+    //     '-i', 'C:/users/pragn/videos/video1.mp4',
+    //     '-s', '640x480', 
+    //     '-codec:a', 'aac', 
+    //     '-b:a', '44.1k', 
+    //     '-r', '15', 
+    //     '-b:v', '1000k', 
+    //     '-c:v','h264', 
+    //     '-f', 'flv', 'C:/users/pragn/videos/video2.mp4'
+    // ];
+    
+    // var proc = spawn(cmd, args);
+    
+    // proc.stdout.on('data', function(data) {
+    //     console.log(data);
+    // });
+    
+    // proc.stderr.setEncoding("utf8")
+    // proc.stderr.on('data', function(data) {
+    //     console.log(data);
+    // });
+    
+    // proc.on('close', function() {
+    //     console.log('finished');
+    // });
+    document.getElementById("golive-button").addEventListener("click", function(){
+		var socketOptions = {secure: true, reconnection: true, reconnectionDelay: 1000, timeout:15000, pingTimeout: 15000, pingInterval: 45000,query: {framespersecond: 24, audioBitrate: 44100}};
+		
+		//start socket connection
+		let socket = io.connect('/', socketOptions);
+	
+        var constraints = { audio: {sampleRate: 44100, 
+                                    echoCancellation: true},
+            video:{
+                width: { min: 100, ideal: 240, max: 1920 },
+                height: { min: 100, ideal: 240, max: 1080 },
+                frameRate: {ideal: 15}
+            }
+        };
+		socket.emit('config_rtmpDestination',"rtmp://x.rtmp.youtube.com/live2/dzb1-ckz4-v01w-zajv-45z0");
+		socket.emit('start','start');
+		let mediaRecorder = new MediaRecorder(mixedStream);
+		mediaRecorder.start(250);
+
+    })
 });

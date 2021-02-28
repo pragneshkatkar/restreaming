@@ -13,22 +13,53 @@
     <script type="module" src='assets/js/events.js'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/7.3.0/adapter.min.js" integrity="sha256-2qQheewaqnZlXJ3RJRghVUwD/3fD9HNqxh4C+zvgmF4=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <style>
+        .create-meeting{
+            padding:5% 0%;
+        }
+        .form-div{
+            padding:5%;
+            border:1px solid #E0E0E0;
+            border-radius:5px;
+        }
+        .create-meeting input{
+            width:100%;
+            padding:2% 5%;
+            border:1px solid #E0E0E0;
+            border-radius:5px;
+            margin-bottom:5%;
+            margin-top:2%;
+            font-size:15px;
+        }
+        .create-meeting button{
+            padding:2% 5%;
+            border:none;
+            background-color:dodgerblue;
+            border-radius:5px;
+            color:white;
+            font-size:15px;
+        }
+    </style>
 </head>
 <body>
     <section class="create-meeting">
         <div class="container">
             <div class="row">
-                <div class="col-lg-4">
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <div class="form-div">
                     <h3>Create meeting</h3>
                     <form id="create-room">
-                        <label>Meeting name</label>
+                        <label>Meeting name</label><br/>
                         <input type="text" id="room-name" placeholder="Meeting name"/>
-                        <label>Your name</label>
+                        <label>Your name</label><br/>
                         <input type="text" id="your-name" placeholder="Your name"/>
                         <button type="submit">Create meeting</button>
                     </form>
                     <div id="room-created"></div>
+                    </div>
                 </div>
+                <div class="col-lg-3"></div>
             </div>
         </div>
     </section>
