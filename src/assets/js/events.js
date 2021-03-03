@@ -61,7 +61,6 @@ window.addEventListener('load', ()=>{
             //empty the values
             // document.querySelector('#room-name').value = '';
             // document.querySelector('#your-name').value = '';
-            alert('dsfsdf');
         }
 
         else{

@@ -348,16 +348,22 @@ window.addEventListener('load', () => {
             };
         }
         function streamtest(){
-            alert('dsdsdsd');
-            socket.emit('config_rtmpDestination', "rtmp://x.rtmp.youtube.com/live2/9pz2-175v-usb1-fab6-3jhf");
-            socket.emit('start','start');
-            let mediaRecorder = new MediaRecorder(mixedStream);
-            mediaRecorder.start(250);
-            console.log(mediaRecorder);
-            mediaRecorder.ondataavailable = function(e) {
-                
-                socket.emit("binarystream",e.data);
-                //chunks.push(e.data);
+            var streamkey = document.getElementById("stream-key").value;
+            if(streamkey != ''){
+                document.getElementById("stream-key").style.border = "1px solid #E0E0E0";
+                socket.emit('config_rtmpDestination', "rtmp://x.rtmp.youtube.com/live2/"+streamkey);
+                socket.emit('start','start');
+                let mediaRecorder = new MediaRecorder(mixedStream);
+                mediaRecorder.start(250);
+                console.log(mediaRecorder);
+                mediaRecorder.ondataavailable = function(e) {
+                    
+                    socket.emit("binarystream",e.data);
+                    //chunks.push(e.data);
+                }
+
+            } else{
+                document.getElementById("stream-key").style.border = '1px solid red';
             }
         }
         function addtomain(stream, name){

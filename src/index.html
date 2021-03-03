@@ -33,6 +33,12 @@
         header button{
             margin-left:10px;
         }
+        header input{
+            padding:1%;
+            border:1px solid #E0E0E0;
+            border-radius:5px;
+            margin-left:5%;
+        }
         .edit-button{
             border:none;
             background-color:white;
@@ -247,10 +253,10 @@
                 <div class="col-lg-2 h-100 d-flex align-items-center">
                     <h3>GEOPTECH</h3>
                 </div>
-                <div class="col-lg-6 h-100 d-flex align-items-center">
+                <div class="col-lg-4 h-100 d-flex align-items-center">
                     <p>Test Meeting</p>
                 </div>
-                <div class="col-lg-4 h-100 d-flex align-items-center justify-content-end">
+                <div class="col-lg-6 h-100 d-flex align-items-center justify-content-end">
                     <button class="d-flex align-items-center edit-button">
                         <i class="material-icons">create</i>
                         <p>Edit</p>
@@ -259,6 +265,7 @@
                         <p>My account</p>
                         <i class="material-icons">keyboard_arrow_down</i>
                     </button>
+                    <input id="stream-key" type="text" placeholder="Enter stream key here"/>
                     <button class="golive-button" id="golive-button">Go Live</button>
                 </div>
             </div>
@@ -288,12 +295,12 @@
             </div>
             <div class="bottom-action-bar align-items-center justify-content-center">
                 <div class="action-bar">
-                    <div id="mute-audio" class="bottom-action-bar-element active">
-                        <i class="material-icons">mic_off</i>
+                    <div id="mute-audio" class="bottom-action-bar-element">
+                        <i class="material-icons">mic</i>
                         <p>Unmute</p>
                     </div>
-                    <div id="mute-video" class="bottom-action-bar-element active">
-                        <i class="material-icons">videocam_off</i>
+                    <div id="mute-video" class="bottom-action-bar-element">
+                        <i class="material-icons">videocam</i>
                         <p>camera</p>
                     </div>
                     <div class="bottom-action-bar-element">
