@@ -61,7 +61,7 @@ const stream = (socket)=>{
 		// 	return;
 		// }
 		
-		var framerate = socket.handshake.query.framespersecond;
+		var framerate = 24;
 		var audioBitrate = 44100;
 	    var audioEncoding = "64k";
 		if (audioBitrate ==11025){
@@ -87,13 +87,13 @@ const stream = (socket)=>{
 			        '-f', 'flv', rtmpDestination		
 			];
 			
-		}else if (framerate == 15){
+		}else if (framerate == 24){
 			var ops = [
 				'-i','-',
 				 '-c:v', 'libx264', '-preset', 'ultrafast', '-tune', 'zerolatency', 
 				'-max_muxing_queue_size', '1000', 
 				'-bufsize', '5000',
-			       '-r', '15', '-g', '30', '-keyint_min','30', 
+			       '-r', '24', '-g', '30', '-keyint_min','30', 
 					'-x264opts', 'keyint=30', '-crf', '25', '-pix_fmt', 'yuv420p',
 			        '-profile:v', 'baseline', '-level', '3', 
      				'-c:a', 'aac', '-b:a',audioEncoding, '-ar', audioBitrate, 

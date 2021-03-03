@@ -90,6 +90,9 @@
             padding:15px 0%;
             color:#707070;
         }
+        .right-sidebar-element:hover{
+            background-color:white;
+        }
         .right-sidebar-element p{
             font-size:10px;
             margin-bottom:0%;
@@ -174,9 +177,13 @@
             border-radius:5px;
             margin-left:10px;
             border:1px solid #D0D0D0;
+            position:relative;
         }
         .videos video{
             border-radius:5px 5px 0px 0px;
+        }
+        .videos p{
+            margin-bottom:0%;
         }
         .add-div{
             display:none;
@@ -241,7 +248,7 @@
                     <h3>GEOPTECH</h3>
                 </div>
                 <div class="col-lg-6 h-100 d-flex align-items-center">
-                    <p>Test</p>
+                    <p>Test Meeting</p>
                 </div>
                 <div class="col-lg-4 h-100 d-flex align-items-center justify-content-end">
                     <button class="d-flex align-items-center edit-button">
@@ -264,7 +271,7 @@
                     <!-- <button id="record">Record</button>
                     <button id="stop">Stop</button>
                     <video id="output-video" controls></video> -->
-                    <video muted id="main-video" style="width:100%;height:100%;" autoplay></video>
+                    <video muted id="main-video" style="width:100%;height:50vh;" autoplay></video>
                 </div>
                 <!-- <video id="remote-video" autoplay class="col-lg-4"></video> -->
             </div>
@@ -273,6 +280,9 @@
                     <div class="videos">
                         <video muted id="local-video" style="width:100%;border-radius:5px 5px 0px 0px;" autoplay></video>
                         <p style="padding:2px 5px;background-color:white;font-size:10px;border-radius:0px 0px 5px 5px;">You</p>
+                        <div class="add-div align-items-center justify-content-center">
+                            <button id="add-local-video" class="add-button">Add to stream</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -361,12 +371,8 @@
                 <p>comments</p>
             </div>
             <div class="right-sidebar-element align-items-center justify-content-center">
-                <i class="material-icons">mode_comment</i>
-                <p>comments</p>
-            </div>
-            <div class="right-sidebar-element align-items-center justify-content-center">
-                <i class="material-icons">mode_comment</i>
-                <p>comments</p>
+                <i class="material-icons">color_lens</i>
+                <p>brand</p>
             </div>
             <div class="right-sidebar-element align-items-center justify-content-center">
                 <i class="material-icons">comment</i>
