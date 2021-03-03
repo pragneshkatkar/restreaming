@@ -150,9 +150,6 @@ window.addEventListener('load', () => {
                 });
 
                 document.getElementById('local-video').srcObject = stream;
-                document.getElementById("add-local-video").addEventListener("click", function(){
-                    addtomain(stream, username);
-                })
             }).catch((e) => {
                 console.error(`stream error: ${e}`);
             });
@@ -330,7 +327,7 @@ window.addEventListener('load', () => {
                     context.fillStyle = 'rgba(255, 255, 255, 1)';
                     roundRect(context, x - measuredTextWidth, y - 18, measuredTextWidth + 40, 29, 20, true);
                     context.fillStyle = 'black';
-                    context.fillText(textToDisplay, x, y);
+                    context.fillText(textToDisplay, x - measuredTextWidth + 10, y);
                 });
                 strs.push(stream);
                 let mixer = new MultiStreamsMixer(strs);
