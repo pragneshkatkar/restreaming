@@ -37,6 +37,18 @@ window.addEventListener('load', () => {
         document.getElementById("golive-button").addEventListener("click", function(){
             streamtest();
         })
+
+        h.getUserMedia().then((stream) => {
+            //save my stream
+            myStream = stream;
+
+            document.getElementById('local-video').srcObject = stream;
+            document.getElementById("add-local-video").addEventListener('click', function(){
+                addtomain(stream, username);
+            })
+        }).catch((e) => {
+            console.error(`stream error: ${e}`);
+        });
         
 
         socket.on('connect', () => {
@@ -247,111 +259,6 @@ window.addEventListener('load', () => {
 
                 document.getElementById("main-video").srcObject = mixer.getMixedStream();
             });
-            function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
-                if (typeof stroke == 'undefined') {
-                    stroke = true;
-                }
-                if (typeof radius === 'undefined') {
-                    radius = 5;
-                }
-                if (typeof radius === 'number') {
-                    radius = {
-                        tl: radius,
-                        tr: radius,
-                        br: radius,
-                        bl: radius
-                    };
-                } else {
-                    var defaultRadius = {
-                        tl: 0,
-                        tr: 0,
-                        br: 0,
-                        bl: 0
-                    };
-                    for (var side in defaultRadius) {
-                        radius[side] = radius[side] || defaultRadius[side];
-                    }
-                }
-                ctx.beginPath();
-                ctx.moveTo(x, y);
-                ctx.lineTo(x + width, y);
-                // ctx.quadraticCurveTo(x + width, y, x + width, y + radius.tr);
-                ctx.lineTo(x + width, y + height);
-                // ctx.quadraticCurveTo(x + width, y + height, x + width - radius.br, y + height);
-                ctx.lineTo(x, y + height);
-                // ctx.quadraticCurveTo(x, y + height, x, y + height - radius.bl);
-                ctx.lineTo(x, y);
-                // ctx.quadraticCurveTo(x, y, x + radius.tl, y)
-                ctx.closePath();
-                if (fill) {
-                    ctx.fill();
-                }
-                // if (stroke) {
-                //     ctx.stroke();
-                // }
-            }
-            function normalVideoRenderHandler(stream, textToDisplay, callback) {
-                // on-video-render:
-                // called as soon as this video stream is drawn (painted or recorded) on canvas2d surface
-                stream.onRender = function(context, x, y, width, height, idx, ignoreCB) {
-                    if(!ignoreCB && callback) {
-                        callback(context, x, y, width, height, idx, textToDisplay);
-                        return;
-                    }
-
-                    var measuredTextWidth = parseInt(context.measureText(textToDisplay).width);
-                    x = x + (parseInt((width - measuredTextWidth)) / 2);
-                    // y = (context.canvas.height - height) + 50;
-                    context.fillStyle = 'rgba(255, 255, 255, 1)';
-                    roundRect(context, x - measuredTextWidth, y - 18, measuredTextWidth + 40, 25, 20, true);
-                    context.fillStyle = 'white';
-                    context.fillText(textToDisplay, x, y);
-                };
-            }
-            function addtomain(stream, name){
-                console.log(stream);
-                normalVideoRenderHandler(stream, name, function(context, x, y, width, height, idx, textToDisplay) {
-                    var measuredTextWidth = parseInt(context.measureText(textToDisplay).width);
-                    x = x + (parseInt((measuredTextWidth)));
-
-                    y = height - 20;
-
-                    if(idx == 2 || idx == 3) {
-                        y = (height * 2) - 20;
-                    }
-
-                    if(idx == 4 || idx == 5) {
-                        y = (height * 3) - 20;
-                    }
-                    
-                    context.fillStyle = 'rgba(255, 255, 255, 1)';
-                    roundRect(context, x - measuredTextWidth, y - 18, measuredTextWidth + 40, 29, 20, true);
-                    context.fillStyle = 'black';
-                    context.fillText(textToDisplay, x - measuredTextWidth + 10, y);
-                });
-                strs.push(stream);
-                let mixer = new MultiStreamsMixer(strs);
-                mixer.frameInterval = 1;
-                mixer.startDrawingFrames();
-                mixedStream = mixer.getMixedStream();
-                document.getElementById("main-video").srcObject = mixedStream;
-                console.log(mixedStream);
-                
-                var socketOptions = {secure: true, reconnection: true, reconnectionDelay: 1000, timeout:15000, pingTimeout: 15000, pingInterval: 45000,query: {framespersecond: 24, audioBitrate: 44100}};
-		
-                    // socket.emit('config_rtmpDestination', "rtmp://x.rtmp.youtube.com/live2/9pz2-175v-usb1-fab6-3jhf");
-                    // socket.emit('start','start');
-                    // let mediaRecorder = new MediaRecorder(mixedStream);
-                    // mediaRecorder.start(250);
-                    // console.log(mediaRecorder);
-                    // mediaRecorder.ondataavailable = function(e) {
-                    
-                    //     socket.emit("binarystream",e.data);
-                    //     //chunks.push(e.data);
-                    // }
-                // console.log(MediaStream.getTrackById(mixer.getMixedStream().id));
-                // document.getElementById("golive-button").addEventListener("click", streamtest(mixedStream), false)
-            }
 
 
 
@@ -379,6 +286,67 @@ window.addEventListener('load', () => {
                 }
             };
         }
+        function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
+            if (typeof stroke == 'undefined') {
+                stroke = true;
+            }
+            if (typeof radius === 'undefined') {
+                radius = 5;
+            }
+            if (typeof radius === 'number') {
+                radius = {
+                    tl: radius,
+                    tr: radius,
+                    br: radius,
+                    bl: radius
+                };
+            } else {
+                var defaultRadius = {
+                    tl: 0,
+                    tr: 0,
+                    br: 0,
+                    bl: 0
+                };
+                for (var side in defaultRadius) {
+                    radius[side] = radius[side] || defaultRadius[side];
+                }
+            }
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + width, y);
+            // ctx.quadraticCurveTo(x + width, y, x + width, y + radius.tr);
+            ctx.lineTo(x + width, y + height);
+            // ctx.quadraticCurveTo(x + width, y + height, x + width - radius.br, y + height);
+            ctx.lineTo(x, y + height);
+            // ctx.quadraticCurveTo(x, y + height, x, y + height - radius.bl);
+            ctx.lineTo(x, y);
+            // ctx.quadraticCurveTo(x, y, x + radius.tl, y)
+            ctx.closePath();
+            if (fill) {
+                ctx.fill();
+            }
+            // if (stroke) {
+            //     ctx.stroke();
+            // }
+        }
+        function normalVideoRenderHandler(stream, textToDisplay, callback) {
+            // on-video-render:
+            // called as soon as this video stream is drawn (painted or recorded) on canvas2d surface
+            stream.onRender = function(context, x, y, width, height, idx, ignoreCB) {
+                if(!ignoreCB && callback) {
+                    callback(context, x, y, width, height, idx, textToDisplay);
+                    return;
+                }
+
+                var measuredTextWidth = parseInt(context.measureText(textToDisplay).width);
+                x = x + (parseInt((width - measuredTextWidth)) / 2);
+                // y = (context.canvas.height - height) + 50;
+                context.fillStyle = 'rgba(255, 255, 255, 1)';
+                roundRect(context, x - measuredTextWidth, y - 18, measuredTextWidth + 40, 25, 20, true);
+                context.fillStyle = 'white';
+                context.fillText(textToDisplay, x, y);
+            };
+        }
         function streamtest(){
             alert('dsdsdsd');
             socket.emit('config_rtmpDestination', "rtmp://x.rtmp.youtube.com/live2/9pz2-175v-usb1-fab6-3jhf");
@@ -391,6 +359,50 @@ window.addEventListener('load', () => {
                 socket.emit("binarystream",e.data);
                 //chunks.push(e.data);
             }
+        }
+        function addtomain(stream, name){
+            console.log(stream);
+            normalVideoRenderHandler(stream, name, function(context, x, y, width, height, idx, textToDisplay) {
+                var measuredTextWidth = parseInt(context.measureText(textToDisplay).width);
+                x = x + (parseInt((measuredTextWidth)));
+
+                y = height - 20;
+
+                if(idx == 2 || idx == 3) {
+                    y = (height * 2) - 20;
+                }
+
+                if(idx == 4 || idx == 5) {
+                    y = (height * 3) - 20;
+                }
+                
+                context.fillStyle = 'rgba(255, 255, 255, 1)';
+                roundRect(context, x - measuredTextWidth, y - 18, measuredTextWidth + 40, 29, 20, true);
+                context.fillStyle = 'black';
+                context.fillText(textToDisplay, x - measuredTextWidth + 10, y);
+            });
+            strs.push(stream);
+            let mixer = new MultiStreamsMixer(strs);
+            mixer.frameInterval = 1;
+            mixer.startDrawingFrames();
+            mixedStream = mixer.getMixedStream();
+            document.getElementById("main-video").srcObject = mixedStream;
+            console.log(mixedStream);
+            
+            var socketOptions = {secure: true, reconnection: true, reconnectionDelay: 1000, timeout:15000, pingTimeout: 15000, pingInterval: 45000,query: {framespersecond: 24, audioBitrate: 44100}};
+    
+                // socket.emit('config_rtmpDestination', "rtmp://x.rtmp.youtube.com/live2/9pz2-175v-usb1-fab6-3jhf");
+                // socket.emit('start','start');
+                // let mediaRecorder = new MediaRecorder(mixedStream);
+                // mediaRecorder.start(250);
+                // console.log(mediaRecorder);
+                // mediaRecorder.ondataavailable = function(e) {
+                
+                //     socket.emit("binarystream",e.data);
+                //     //chunks.push(e.data);
+                // }
+            // console.log(MediaStream.getTrackById(mixer.getMixedStream().id));
+            // document.getElementById("golive-button").addEventListener("click", streamtest(mixedStream), false)
         }
     }
     let isAudio = true;
