@@ -33,7 +33,6 @@ window.addEventListener('load', () => {
         var myStream = '';
         var strs = [];
         var str = [];
-        let tempusername;
         document.getElementById("golive-button").addEventListener("click", function(){
             streamtest();
         })
@@ -193,7 +192,7 @@ window.addEventListener('load', () => {
                 let str = e.streams[0];
                 console.log(e);
                 let partnerNameArr = partnerName.split('____');
-                tempusername = partnerNameArr[partnerNameArr.length - 1];
+                let tempusername = partnerNameArr[partnerNameArr.length - 1];
                 if (document.getElementById(`${partnerName}-video`)) {
                     // alert('if'+partnerName);
                     document.getElementById(`${partnerName}-video`).srcObject = str;
@@ -235,15 +234,16 @@ window.addEventListener('load', () => {
                     div.appendChild(adddiv);
 
                     let addbutton = document.createElement('button');
+                    addbutton.id = partnerName+"-button";
+                    addbutton.addEventListener('click', function(){
+                        addtomain(str, tempusername)
+                    });
                     addbutton.className = 'add-button';
                     if(strs.includes(str)){
                         addbutton.textContent = 'Remove from stream';
                     } else{
                         addbutton.textContent = 'Add to stream';
                     }
-                    addbutton.addEventListener('click', function(){
-                        addtomain(str, tempusername)
-                    });
                     adddiv.appendChild(addbutton);
 
                     //put div in videos elem
@@ -348,6 +348,7 @@ window.addEventListener('load', () => {
             };
         }
         function streamtest(){
+            alert('dsdsdsd');
             var streamkey = document.getElementById("stream-key").value;
             if(streamkey != ''){
                 document.getElementById("stream-key").style.border = "1px solid #E0E0E0";
