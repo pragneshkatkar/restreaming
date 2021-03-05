@@ -8,7 +8,7 @@ import h from './helpers.js';
 window.addEventListener('load', () => {
     const room = h.getQString(location.href, 'room');
     const username = sessionStorage.getItem('username');
-    let mixedStream;
+    let mixedStream = '';
 
     if (!room) {
         window.location.href = "/create-meeting";
@@ -348,19 +348,24 @@ window.addEventListener('load', () => {
             };
         }
         function streamtest(){
-            alert('dsdsdsd');
             var streamkey = document.getElementById("stream-key").value;
             if(streamkey != ''){
                 document.getElementById("stream-key").style.border = "1px solid #E0E0E0";
                 socket.emit('config_rtmpDestination', "rtmp://x.rtmp.youtube.com/live2/"+streamkey);
                 socket.emit('start','start');
-                let mediaRecorder = new MediaRecorder(mixedStream);
-                mediaRecorder.start(250);
-                console.log(mediaRecorder);
-                mediaRecorder.ondataavailable = function(e) {
-                    
-                    socket.emit("binarystream",e.data);
-                    //chunks.push(e.data);
+                if(mixedStream != ''){
+                    document.getElementById("golive-button").textContent = 'You are live';
+                    let mediaRecorder = new MediaRecorder(mixedStream);
+                    mediaRecorder.start(250);
+                    console.log(mediaRecorder);
+                    mediaRecorder.ondataavailable = function(e) {
+                        
+                        socket.emit("binarystream",e.data);
+                        //chunks.push(e.data);
+                    }
+
+                } else{
+                    alert("You have not added any stream")
                 }
 
             } else{
