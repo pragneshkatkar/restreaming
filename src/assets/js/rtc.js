@@ -95,7 +95,6 @@ window.addEventListener('load', () => {
                         stream.getTracks().forEach((track) => {
                             pc[data.sender].addTrack(track, stream);
                         });
-                        console.log(pc[data.sender]);
 
                         let answer = await pc[data.sender].createAnswer();
 
@@ -118,7 +117,6 @@ window.addEventListener('load', () => {
             });
 
             socket.on('video_change', (data) => {
-                console.log(data.streamArray);
                 let mixer = new MultiStreamsMixer(MediaStream.getTrackById(data.streamArray));
                 mixer.frameInterval = 1;
                 mixer.startDrawingFrames();
@@ -188,8 +186,8 @@ window.addEventListener('load', () => {
 
             //add
             pc[partnerName].ontrack = (e) => {
+                console.log("The user is connected");
                 let str = e.streams[0];
-                console.log(e);
                 let partnerNameArr = partnerName.split('____');
                 let tempusername = partnerNameArr[partnerNameArr.length - 1];
                 if (document.getElementById(`${partnerName}-video`)) {
@@ -262,6 +260,7 @@ window.addEventListener('load', () => {
 
 
             pc[partnerName].onconnectionstatechange = (d) => {
+                console.log("The user is disconnected");
                 switch (pc[partnerName].iceConnectionState) {
                     case 'disconnected':
                     case 'failed':
@@ -356,7 +355,6 @@ window.addEventListener('load', () => {
                     document.getElementById("golive-button").textContent = 'You are live';
                     let mediaRecorder = new MediaRecorder(mixedStream);
                     mediaRecorder.start(250);
-                    console.log(mediaRecorder);
                     mediaRecorder.ondataavailable = function(e) {
                         
                         socket.emit("binarystream",e.data);
@@ -372,7 +370,6 @@ window.addEventListener('load', () => {
             }
         }
         function addtomain(stream, name){
-            console.log(stream);
             normalVideoRenderHandler(stream, name, function(context, x, y, width, height, idx, textToDisplay) {
                 var measuredTextWidth = parseInt(context.measureText(textToDisplay).width);
                 x = x + (parseInt((measuredTextWidth)));
@@ -398,7 +395,6 @@ window.addEventListener('load', () => {
             mixer.startDrawingFrames();
             mixedStream = mixer.getMixedStream();
             document.getElementById("main-video").srcObject = mixedStream;
-            console.log(mixedStream);
             
             var socketOptions = {secure: true, reconnection: true, reconnectionDelay: 1000, timeout:15000, pingTimeout: 15000, pingInterval: 45000,query: {framespersecond: 24, audioBitrate: 44100}};
     
