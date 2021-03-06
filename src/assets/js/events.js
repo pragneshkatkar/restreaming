@@ -2,71 +2,62 @@ import helpers from './helpers.js';
 
 window.addEventListener('load', ()=>{
     //When the chat icon is clicked
-    // document.querySelector('#toggle-chat-pane').addEventListener('click', (e)=>{
-    //     document.querySelector('#chat-pane').classList.toggle('chat-opened');
+    document.querySelector('#toggle-chat-pane').addEventListener('click', (e)=>{
+        document.querySelector('#chat-pane').classList.toggle('chat-opened');
 
-    //     //remove the 'New' badge on chat icon (if any) once chat is opened.
-    //     setTimeout(()=>{
-    //         if(document.querySelector('#chat-pane').classList.contains('chat-opened')){
-    //             helpers.toggleChatNotificationBadge();
-    //         }
-    //     }, 300);
-    // });
+        //remove the 'New' badge on chat icon (if any) once chat is opened.
+        setTimeout(()=>{
+            if(document.querySelector('#chat-pane').classList.contains('chat-opened')){
+                helpers.toggleChatNotificationBadge();
+            }
+        }, 300);
+    });
 
 
     //When the video frame is clicked. This will enable picture-in-picture
-    // document.getElementById('local-video').addEventListener('click', ()=>{
-    //     if (!document.pictureInPictureElement) {
-    //         document.getElementById('local-video').requestPictureInPicture()
-    //         .catch(error => {
-    //             // Video failed to enter Picture-in-Picture mode.
-    //             console.error(error);
-    //         });
-    //     } 
+    document.getElementById('local').addEventListener('click', ()=>{
+        if (!document.pictureInPictureElement) {
+            document.getElementById('local').requestPictureInPicture()
+            .catch(error => {
+                // Video failed to enter Picture-in-Picture mode.
+                console.error(error);
+            });
+        } 
           
-    //     else {
-    //         document.exitPictureInPicture()
-    //         .catch(error => {
-    //             // Video failed to leave Picture-in-Picture mode.
-    //             console.error(error);
-    //         });
-    //     }
-    // });
+        else {
+            document.exitPictureInPicture()
+            .catch(error => {
+                // Video failed to leave Picture-in-Picture mode.
+                console.error(error);
+            });
+        }
+    });
 
 
     //When the 'Create room" is button is clicked
-    document.getElementById('create-room').addEventListener('submit', (e)=>{
+    document.getElementById('create-room').addEventListener('click', (e)=>{
         e.preventDefault();
 
         let roomName = document.querySelector('#room-name').value;
         let yourName = document.querySelector('#your-name').value;
 
-        // let roomName = 'test';
-        // let yourName = 'test';
-
         if(roomName && yourName){
             //remove error message, if any
-            // document.querySelector('#err-msg').innerHTML = "";
+            document.querySelector('#err-msg').innerHTML = "";
 
             //save the user's name in sessionStorage
             sessionStorage.setItem('username', yourName);
 
             //create room link
-            let rommName = `${roomName.trim().replace(' ', '_')}_${helpers.generateRandomString()}`
-            let roomLink = `${location.origin}?room=${rommName}`;
+            let roomLink = `${location.origin}?room=${roomName.trim().replace(' ', '_')}_${helpers.generateRandomString()}`;
 
             //show message with link to room
             document.querySelector('#room-created').innerHTML = `Room successfully created. Click <a href='${roomLink}'>here</a> to enter room. 
                 Share the room link with your partners.`;
-            
-            // $("#room-created").load("create-meeting-act", {
-            //     host: yourName,
-            //     meeting_id: rommName
-            // });
 
             //empty the values
-            // document.querySelector('#room-name').value = '';
-            // document.querySelector('#your-name').value = '';
+            document.querySelector('#room-name').value = '';
+            document.querySelector('#your-name').value = '';
         }
 
         else{
@@ -76,25 +67,24 @@ window.addEventListener('load', ()=>{
 
 
     //When the 'Enter room' button is clicked.
-    // document.getElementById('enter-room').addEventListener('click', (e)=>{
-    //     e.preventDefault();
+    document.getElementById('enter-room').addEventListener('click', (e)=>{
+        e.preventDefault();
 
-    //     // let name = document.querySelector('#username').value;
-    //     let name = 'test';
+        let name = document.querySelector('#username').value;
 
-    //     if(name){
-    //         //remove error message, if any
-    //         // document.querySelector('#err-msg-username').innerHTML = "";
+        if(name){
+            //remove error message, if any
+            document.querySelector('#err-msg-username').innerHTML = "";
 
-    //         //save the user's name in sessionStorage
-    //         sessionStorage.setItem('username', name);
+            //save the user's name in sessionStorage
+            sessionStorage.setItem('username', name);
 
-    //         //reload room
-    //         location.reload();
-    //     }
+            //reload room
+            location.reload();
+        }
 
-    //     else{
-    //         document.querySelector('#err-msg-username').innerHTML = "Please input your name";
-    //     }
-    // });
+        else{
+            document.querySelector('#err-msg-username').innerHTML = "Please input your name";
+        }
+    });
 })
