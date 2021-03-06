@@ -90,7 +90,7 @@ window.addEventListener('load', () => {
                         }
 
                         //save my stream
-                        myStream = stream;
+                        // myStream = stream;
 
                         stream.getTracks().forEach((track) => {
                             pc[data.sender].addTrack(track, stream);
@@ -263,12 +263,10 @@ window.addEventListener('load', () => {
                 switch (pc[partnerName].iceConnectionState) {
                     case 'disconnected':
                     case 'failed':
-                        h.closeVideo(partnerName);
                         console.log("The user is failed/disconnected");
                         break;
 
                     case 'closed':
-                        h.closeVideo(partnerName);
                         console.log("The user is closed");
                         break;
                 }
