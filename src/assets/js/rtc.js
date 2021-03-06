@@ -90,7 +90,7 @@ window.addEventListener('load', () => {
                         }
 
                         //save my stream
-                        myStream = stream;
+                        // myStream = stream;
 
                         stream.getTracks().forEach((track) => {
                             pc[data.sender].addTrack(track, stream);
