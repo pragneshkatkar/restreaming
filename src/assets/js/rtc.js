@@ -34,7 +34,7 @@
  
          socket.on('connect', ()=>{
              //set socketId
-             socketId = socket.io.engine.id;
+            socketId = socket.io.engine.id+"____"+username;
          
  
              socket.emit('subscribe', {
