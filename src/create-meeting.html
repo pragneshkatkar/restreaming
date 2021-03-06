@@ -49,7 +49,7 @@
                 <div class="col-lg-6">
                     <div class="form-div">
                     <h3>Create meeting</h3>
-                    <form id="create-room">
+                    <form id="create-room" method="POST" action="create-meeting-act">
                         <label>Meeting name</label><br/>
                         <input type="text" id="room-name" placeholder="Meeting name"/>
                         <label>Your name</label><br/>
@@ -63,5 +63,6 @@
             </div>
         </div>
     </section>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </body>
 </html>

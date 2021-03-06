@@ -27,7 +27,7 @@ window.addEventListener('load', () => {
 
         var pc = [];
 
-        let socket = io('/stream');
+        var socket = io.connect('/stream');
 
         var socketId = '';
         var myStream = '';
@@ -37,17 +37,16 @@ window.addEventListener('load', () => {
             streamtest();
         })
 
-        h.getUserMedia().then((stream) => {
-            //save my stream
-            myStream = stream;
+        // h.getUserMedia().then((stream) => {
+        //     //save my stream
 
-            document.getElementById('local-video').srcObject = stream;
-            document.getElementById("add-local-video").addEventListener('click', function(){
-                addtomain(stream, username);
-            })
-        }).catch((e) => {
-            console.error(`stream error: ${e}`);
-        });
+        //     document.getElementById('local-video').srcObject = stream;
+        //     document.getElementById("add-local-video").addEventListener('click', function(){
+        //         addtomain(stream, username);
+        //     })
+        // }).catch((e) => {
+        //     console.error(`stream error: ${e}`);
+        // });
         
 
         socket.on('connect', () => {
