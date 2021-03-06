@@ -52,7 +52,13 @@ export default {
     getUserMedia(){
         if(this.userMediaAvailable()){
             return navigator.mediaDevices.getUserMedia({
-                video: true, 
+                video: {
+                    frameRate: 24,
+                    width: {
+                        min: 480, ideal: 480, max: 480
+                    },
+                    aspectRatio: 1.6
+                }, 
                 audio: {
                     echoCancellation: true
                 }

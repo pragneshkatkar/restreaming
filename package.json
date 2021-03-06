@@ -1,18 +1,42 @@
 {
-  "name": "livestream-server",
-  "version": "0.0.1",
+  "name": "streaming",
+  "version": "1.0.0",
   "description": "A conference call implementation using WebRTC, Socket.io and Node.js.",
   "main": "src/app.js",
   "dependencies": {
+    "better-assert": "^1.0.2",
+    "body-parser": "^1.19.0",
+    "callsite": "^1.0.0",
+    "child-process": "^1.0.2",
+    "exec": "^0.2.1",
     "express": "^4.17.1",
-    "socket.io": "^2.4.1"
+    "ffmpeg-stream": "^0.7.0",
+    "fluent-ffmpeg": "^2.1.2",
+    "fs": "0.0.1-security",
+    "has-binary": "^0.1.7",
+    "hbs": "^4.1.1",
+    "json3": "^3.3.3",
+    "mysql": "^2.18.1",
+    "object-assign": "^4.1.1",
+    "object-component": "0.0.3",
+    "options": "0.0.6",
+    "route": "^0.2.5",
+    "router": "^1.3.5",
+    "routes": "^2.1.0",
+    "socket.io": "^2.4.1",
+    "spawn-npm-install": "^1.2.0",
+    "ultron": "^1.1.1",
+    "videojs-watermark": "^2.0.0",
+    "webrtc-adapter": "^7.7.0",
+    "wtf-8": "^1.0.1"
   },
   "devDependencies": {
-    "nodemon": "^2.0.2"
+    "video.js": "^7.11.4"
   },
   "scripts": {
     "watch": "nodemon --watch \"src/\" --exec \"node src/app.js\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/app.js"
   },
   "repository": {
     "type": "git",
