@@ -1,5 +1,5 @@
 .chat-col{
-    right: 0;
+    right: -100vw;
     bottom: 0;
     top: 40.5px;
     z-index: 1000;
@@ -10,6 +10,15 @@
     padding-bottom: 40px;
     padding-top: 15px;
     min-height: 100vh;
+}
+
+.chat-col.chat-opened {
+    right: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: all 0.3s ease !important;
+    -webkit-transition: all 0.3s ease !important;
+    -moz-transition: all 0.3s ease !important;
 }
 
 #chat-messages{
@@ -53,24 +62,49 @@
     overflow-x: scroll;
 }
 
-
-.remote-video{
-    position: relative;
-    object-fit: cover !important;
-    height: 300px;
-}
-
 .main{
     padding-top: 40px;
 }
+
+
+.remote-video{
+    width:100%;
+    height:auto;
+    max-height: 90vh;
+}
+
+
+.remote-video-controls{
+    position:absolute;
+    bottom: 0;
+    background-color:rgba(0, 0, 0, 0.5);
+    z-index:300000;
+    padding: 10px;
+    width: 100%;
+    text-align: center;
+    visibility: hidden;
+}
+
+
+.remote-video:hover + .remote-video-controls,
+.remote-video-controls:hover{
+    visibility: visible;
+}
+
 
 .local-video{
     bottom: 0;
     left: 0;
     position: fixed;
-    height: 100px;
-    width: 200px;
-    z-index: 1000;
+    width:15vw;
+}
+
+
+.mirror-mode{
+    -ms-transform: scaleX(-1);
+    -moz-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
 }
 
 
@@ -103,6 +137,59 @@
 }
 
 
+#close-single-peer-btn {
+    position: fixed;
+    top: 0;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.5);
+    color: #f1f1f1;
+    border-radius: 0%;
+    z-index: 100;
+}
+
+
+.pointer{
+    cursor: pointer;
+}
+
+
+.record-option{
+    height: 200px;
+    border-radius: 10%;
+    border: 1px solid #17a2b8;
+    cursor: pointer;
+    padding: 10px;
+    vertical-align: middle;
+}
+
+
+.custom-modal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+
+.custom-modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #17a2b8;
+    width: 80%;
+}
+
+
+@keyframes animatetop {
+    from {top: -300px; opacity: 0}
+    to {top: 0; opacity: 1}
+}
+
+
 @media only screen and (max-width:767px){
     .chat-col{
         right: -100vw;
@@ -111,27 +198,9 @@
         transition: 0.3s;
         top: 47px;
     }
-
-    .chat-col.chat-opened {
-        right: 0;
-        overflow-y: auto;
-        overflow-x: hidden;
-        transition: all 0.3s ease !important;
-        -webkit-transition: all 0.3s ease !important;
-        -moz-transition: all 0.3s ease !important;
-    }
   
     .chat-opened::-webkit-scrollbar {
         display: none;
-    }
-
-    .remote-video{
-        height: 200px;
-    }
-
-    .local-video{
-        height: 80px;
-        width: 100px;
     }
 
     #chat-messages{
@@ -141,5 +210,23 @@
     .chat-box{
         bottom: 90px;
         margin-bottom: 0px;
+    }
+    
+    .card-sm{
+        max-width: 100%;
+        min-width: 50%;
+    }
+
+
+    .local-video{
+        width:40vw;
+    }
+}
+
+
+@media (min-width:768px){
+    .card{
+        width: 50%;
+        z-index: 1000;
     }
 }
