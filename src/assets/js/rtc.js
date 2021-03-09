@@ -27,7 +27,7 @@ window.addEventListener('load', () => {
 
         var pc = [];
 
-        var socket = io.connect('/stream');
+        var socket = io('/stream');
 
         var socketId = '';
         var myStream = '';
@@ -263,10 +263,12 @@ window.addEventListener('load', () => {
                 switch (pc[partnerName].iceConnectionState) {
                     case 'disconnected':
                     case 'failed':
+                        h.closeVideo(partnerName);
                         console.log("The user is failed/disconnected");
                         break;
 
                     case 'closed':
+                        h.closeVideo(partnerName);
                         console.log("The user is closed");
                         break;
                 }
