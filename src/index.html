@@ -1,150 +1,401 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Multi-User Video Call</title>
-
-        <meta content="width=device-width, initial-scale=1" name="viewport" />
-
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-        <link rel='stylesheet' href='assets/css/app.css' type="text/css">
-
-        <script src='/socket.io/socket.io.js'></script>
-        <script type="module" src='assets/js/rtc.js'></script>
-        <script type="module" src='assets/js/events.js'></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/7.3.0/adapter.min.js" integrity="sha256-2qQheewaqnZlXJ3RJRghVUwD/3fD9HNqxh4C+zvgmF4=" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-        <script src='https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.min.js'></script>
-        <script src='https://cdn.rawgit.com/yahoo/xss-filters/master/dist/xss-filters.js'></script>
-        <script src='assets/js/autolink.js'></script>
-    </head>
-
-    <body>
-        <div class="custom-modal" id='recording-options-modal'>
-            <div class="custom-modal-content">
-                <div class="row text-center">
-                    <div class="col-md-6 mb-2">
-                        <span class="record-option" id='record-video'>Record video</span>
-                    </div>
-                    <div class="col-md-6 mb-2">
-                        <span class="record-option" id='record-screen'>Record screen</span>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://vjs.zencdn.net/7.10.2/video-js.css" rel="stylesheet" />
+    <script src='/socket.io/socket.io.js'></script>
+    <script type="module" src='assets/js/rtc.js'></script>
+    <!-- <script type="module" src='assets/js/events.js'></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/7.3.0/adapter.min.js" integrity="sha256-2qQheewaqnZlXJ3RJRghVUwD/3fD9HNqxh4C+zvgmF4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script src="https://www.webrtc-experiment.com/MultiStreamsMixer.js"></script>
+    <style>
+        html{
+            height:100%;
+        }
+        body{
+            height:100%;
+        }
+        header{
+            height:60px;
+            background-color:white;
+            border-bottom:1px solid #D0D0D0;
+        }
+        header p{
+            margin-bottom:0%;
+            font-size:15px;
+        }
+        header button{
+            margin-left:10px;
+        }
+        header input{
+            padding:1%;
+            border:1px solid #E0E0E0;
+            border-radius:5px;
+            margin-left:5%;
+        }
+        .edit-button{
+            border:none;
+            background-color:white;
+            border-radius:5px;
+            padding:7px 15px;
+            font-size:15px;
+            color:#707070;
+        }
+        .edit-button:hover{
+            background-color:#E0E0E0;
+        }
+        .edit-button i{
+            font-size:17px;
+            margin-right:5px;
+        }
+        .myaccount-button{
+            border:none;
+            background-color:#E0E0E0;
+            border-radius:5px;
+            padding:7px 15px;
+            font-size:15px;
+        }
+        .myaccount-button i{
+            font-size:17px;
+            margin-left:5px;
+        }
+        .golive-button{
+            border:none;
+            background-color:dodgerblue;
+            border-radius:5px;
+            color:white;
+            padding:7px 15px;
+            font-size:15px;
+        }
+        main{
+            height:calc(100% - 60px);
+            display:flex;
+        }
+        .act-main{
+            flex-grow:1;
+            background-color:#F0F0F0;
+            display:flex;
+            flex-direction:column;
+        }
+        .right-sidebar{
+            flex-basis:70px;
+            border-left:1px solid #D0D0D0;
+            background-color:#F0F0F0;
+            display:flex;
+            flex-direction:column;
+        }
+        .right-sidebar-element{
+            display:flex;
+            flex-direction:column;
+            padding:15px 0%;
+            color:#707070;
+        }
+        .right-sidebar-element:hover{
+            background-color:white;
+        }
+        .right-sidebar-element p{
+            font-size:10px;
+            margin-bottom:0%;
+            margin-top:5px;
+            padding:0% 10px;
+            text-align:center;
+        }
+        .right-sidebar-element.active{
+            background-color:white;
+            color:#505050;
+        }
+        .open-right-sidebar{
+            width:350px;
+            background-color:white;
+            border-left:1px solid #D0D0D0;
+        }
+        .chat-div{
+            display:flex;
+            height:100%;
+            flex-direction:column;
+        }
+        .message-div{
+            flex-grow:1;
+            padding:10px;
+            overflow-y:auto;
+        }
+        .message-div .act-message{
+            padding:5px 0%;
+            display:flex;
+        }
+        .message-div .act-message .message{
+            padding:5px;
+            background-color:#E0E0E0;
+            border-radius:5px;
+            font-size:15px;
+        }
+        .message-div .act-message .name-div{
+            display:flex;
+            flex-direction:column;
+        }
+        .message-div .act-message .name-div p{
+            font-size:13px;
+            color:#A0A0A0;
+            margin-bottom:5px;
+            margin-right:5px;
+        }
+        .message-div .act-message .act-name{
+            display:flex;
+        }
+        .input-div, .submit-div{
+            padding:10px;
+            display:flex;
+        }
+        .input-div input{
+            width:100%;
+            padding:5px 10px;
+            border:3px solid #D0D0D0;
+            border-radius:5px;
+            font-size:15px;
+        }
+        .video-div{
+            flex-grow:1;
+            padding:10px 0px;
+        }
+        .all-videos{
+            flex-basis:70px;
+        }
+        .all-videos{
+            padding:10px 0;
+            flex-direction:row;
+        }
+        .act-videos{
+            display:flex;
+            flex-direction:row;
+            flex-grow:1;
+            overflow-x:auto;
+        }
+        .videos{
+            width:150px;
+            height:100%;
+            background-color:white;
+            border-radius:5px;
+            margin-left:10px;
+            border:1px solid #D0D0D0;
+            position:relative;
+        }
+        .videos video{
+            border-radius:5px 5px 0px 0px;
+        }
+        .videos p{
+            margin-bottom:0%;
+        }
+        .add-div{
+            display:none;
+            position:absolute;
+            width:100%;
+            height:100%;
+            top:0%;
+            left:0%;
+            background-color:rgba(255, 255, 255, 0.6);
+        }
+        .videos:hover .add-div{
+            display:flex;
+        }
+        .add-button{
+            padding:5px;
+            font-size:10px;
+            background-color:dodgerblue;
+            color:white;
+            border:none;
+            border-radius:5px;
+        }
+        .bottom-action-bar{
+            display:flex;
+        }
+        .action-bar{
+            display:flex;
+            box-shadow:0px 0px 5px rgba(0, 0, 0, 0.25);
+            border-radius:5px 5px 0px 0px;
+            background-color:white;
+        }
+        .bottom-action-bar-element{
+            text-align:center;
+            padding:5px 15px;
+            background-color:white;
+            color:#707070;
+            cursor:pointer;
+        }
+        .bottom-action-bar-element:hover{
+            background-color:#F0F0F0;
+        }
+        .bottom-action-bar-element:first-child{
+            border-radius:5px 0px 0px 0px;
+        }
+        .bottom-action-bar-element:last-child{
+            border-radius:0px 5px 0px 0px;
+        }
+        .bottom-action-bar-element p{
+            margin-bottom:0%;
+            font-size:15px;
+        }
+        .bottom-action-bar-element.active{
+            background-color:rgba(255, 0, 0, 0.15);
+            color:red;
+        }
+    </style>
+</head>
+<body>
+    <header class="d-flex align-items-center">
+        <div class="container-fluid h-100">
+            <div class="row h-100">
+                <div class="col-lg-2 h-100 d-flex align-items-center">
+                    <h3>GEOPTECH</h3>
+                </div>
+                <div class="col-lg-4 h-100 d-flex align-items-center">
+                    <p>Test Meeting</p>
+                </div>
+                <div class="col-lg-6 h-100 d-flex align-items-center justify-content-end">
+                    <button class="d-flex align-items-center edit-button">
+                        <i class="material-icons">create</i>
+                        <p>Edit</p>
+                    </button>
+                    <button class="d-flex align-items-center myaccount-button" id="enter-multistream">
+                        <p>My account</p>
+                        <i class="material-icons">keyboard_arrow_down</i>
+                    </button>
+                    <input id="stream-key" type="text" placeholder="Enter stream key here"/>
+                    <button class="golive-button" id="golive-button">Go Live</button>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="act-main">
+            <div class="row video-div d-flex align-items-start justify-content-center">
+                <div class="col-lg-7 h-100">
+                    <!-- <button id="record">Record</button>
+                    <button id="stop">Stop</button>
+                    <video id="output-video" controls></video> -->
+                    <video muted id="main-video" style="width:100%;height:50vh;" autoplay></video>
+                </div>
+                <!-- <video id="remote-video" autoplay class="col-lg-4"></video> -->
+            </div>
+            <div class="all-videos d-flex">
+                <div id="videos" class="act-videos">
+                    <div class="videos">
+                        <video muted id="local-video" style="width:100%;border-radius:5px 5px 0px 0px;" autoplay></video>
+                        <p style="padding:2px 5px;background-color:white;font-size:10px;border-radius:0px 0px 5px 5px;">You</p>
+                        <div class="add-div align-items-center justify-content-center">
+                            <button id="add-local-video" class="add-button">Add to stream</button>
+                        </div>
                     </div>
                 </div>
-
-                <div class="row mt-3">
-                    <div class="col-md-12 text-center">
-                        <button class="btn btn-outline-danger" id='closeModal'>Close</button>
+            </div>
+            <div class="bottom-action-bar align-items-center justify-content-center">
+                <div class="action-bar">
+                    <div id="mute-audio" class="bottom-action-bar-element">
+                        <i class="material-icons">mic</i>
+                        <p>Unmute</p>
+                    </div>
+                    <div id="mute-video" class="bottom-action-bar-element">
+                        <i class="material-icons">videocam</i>
+                        <p>camera</p>
+                    </div>
+                    <div class="bottom-action-bar-element">
+                        <i class="material-icons">settings</i>
+                        <p>cam/mic</p>
+                    </div>
+                    <div id="screen-share" class="bottom-action-bar-element">
+                        <i class="material-icons">screen_share</i>
+                        <p>Share</p>
+                    </div>
+                    <div class="bottom-action-bar-element">
+                        <i class="material-icons">share</i>
+                        <p>Invite</p>
                     </div>
                 </div>
             </div>
         </div>
-        
-        
-        <nav class="navbar fixed-top bg-info rounded-0 d-print-none">
-            <div class="text-white">Video Call</div>
-
-            <div class="pull-right room-comm" hidden>
-                <button class="btn btn-sm rounded-0 btn-no-effect" id='toggle-video' title="Hide Video">
-                    <i class="fa fa-video text-white"></i>
-                </button>
-
-                <button class="btn btn-sm rounded-0 btn-no-effect" id='toggle-mute' title="Mute">
-                    <i class="fa fa-microphone-alt text-white"></i>
-                </button>
-
-                <button class="btn btn-sm rounded-0 btn-no-effect" id='share-screen' title="Share screen">
-                    <i class="fa fa-desktop text-white"></i>
-                </button>
-
-                <button class="btn btn-sm rounded-0 btn-no-effect" id='record' title="Record">
-                    <i class="fa fa-dot-circle text-white"></i>
-                </button>
-
-                <button class="btn btn-sm text-white pull-right btn-no-effect" id='toggle-chat-pane'>
-                    <i class="fa fa-comment"></i> <span class="badge badge-danger very-small font-weight-lighter" id='new-chat-notification' hidden>New</span>
-                </button>
-
-                <button class="btn btn-sm rounded-0 btn-no-effect text-white">
-                    <a href="/" class="text-white text-decoration-none"><i class="fa fa-sign-out-alt text-white" title="Leave"></i></a>
-                </button>
-            </div>
-        </nav>
-
-        <div class="container-fluid" id='room-create' hidden>
-            <div class="row">
-                <div class="col-12 h2 mt-5 text-center">Create Room</div>
-            </div>
-            
-            <div class="row mt-2">
-                <div class="col-12 text-center">
-                    <span class="form-text small text-danger" id='err-msg'></span>
-                </div>
-
-                <div class="col-12 col-md-4 offset-md-4 mb-3">
-                    <label for="room-name">Room Name</label>
-                    <input type="text" id='room-name' class="form-control rounded-0" placeholder="Room Name">
-                </div>
-
-                <div class="col-12 col-md-4 offset-md-4 mb-3">
-                    <label for="your-name">Your Name</label>
-                    <input type="text" id='your-name' class="form-control rounded-0" placeholder="Your Name">
-                </div>
-
-                <div class="col-12 col-md-4 offset-md-4 mb-3">
-                    <button id='create-room' class="btn btn-block rounded-0 btn-info">Create Room</button>
-                </div>
-
-                <div class="col-12 col-md-4 offset-md-4 mb-3" id='room-created'></div>
-            </div>
-        </div>
-
-
-
-        <div class="container-fluid" id='username-set' hidden>
-            <div class="row">
-                <div class="col-12 h4 mt-5 text-center">Your Name</div>
-            </div>
-            
-            <div class="row mt-2">
-                <div class="col-12 text-center">
-                    <span class="form-text small text-danger" id='err-msg-username'></span>
-                </div>
-
-                <div class="col-12 col-md-4 offset-md-4 mb-3">
-                    <label for="username">Your Name</label>
-                    <input type="text" id='username' class="form-control rounded-0" placeholder="Your Name">
-                </div>
-
-                <div class="col-12 col-md-4 offset-md-4 mb-3">
-                    <button id='enter-room' class="btn btn-block rounded-0 btn-info">Enter Room</button>
-                </div>
-            </div>
-        </div>
-
-
-        
-        <div class="container-fluid room-comm" hidden>
-            <div class="row">
-                <video class="local-video mirror-mode" id='local' volume='0' autoplay muted></video>
-            </div>
-            
-            <div class="row">
-                <div class="col-md-12 main" id='main-section'>                    
-                    <div class="row mt-2 mb-2" id='videos'></div>
-                </div>
-
-                <div class="col-md-3 chat-col d-print-none mb-2 bg-info" id='chat-pane' hidden>
-                    <div class="row">
-                        <div class="col-12 text-center h2 mb-3">CHAT</div>
+        <div class="open-right-sidebar">
+            <div class="chat-div">
+                <div class="message-div">
+                    <div class="act-message justify-content-end">
+                        <div class="message">Hello</div>
                     </div>
-
-                    <div id='chat-messages'></div>
-
-                    <div class="row">
-                        <textarea id='chat-input' class="form-control rounded-0 chat-box border-info" rows='3' placeholder="Type here..."></textarea>
+                    <div class="act-message">
+                        <div class="name-div align-items-start justify-content-start">
+                            <div class="act-name">
+                                <p>Kaushik Sir</p><p>&#x25cf; Time</p>
+                            </div>
+                            <div class="message">Hello</div>
+                        </div>
+                    </div>
+                    <div class="act-message justify-content-end">
+                        <div class="message">Hello</div>
+                    </div>
+                    <div class="act-message justify-content-end">
+                        <div class="message">Hello</div>
+                    </div>
+                    <div class="act-message">
+                        <div class="name-div align-items-start justify-content-start">
+                            <div class="act-name">
+                                <p>Kaushik Sir</p><p>&#x25cf; Time</p>
+                            </div>
+                            <div class="message">Hello</div>
+                        </div>
+                    </div>
+                    <div class="act-message justify-content-end">
+                        <div class="message">Hello</div>
+                    </div>
+                    <div class="act-message justify-content-end">
+                        <div class="message">Hello</div>
+                    </div>
+                    <div class="act-message">
+                        <div class="name-div align-items-start justify-content-start">
+                            <div class="act-name">
+                                <p>Kaushik Sir</p><p>&#x25cf; Time</p>
+                            </div>
+                            <div class="message">Hello</div>
+                        </div>
+                    </div>
+                    <div class="act-message justify-content-end">
+                        <div class="message">Hello</div>
                     </div>
                 </div>
+                <div class="input-div justify-content-end">
+                    <input type="text" placeholder="Write message..."/>
+                </div>
+                <div class="submit-div justify-content-end">
+                    <button class="golive-button">Send</button>
+                </div>
             </div>
         </div>
-    </body>
+        <div class="right-sidebar">
+            <div class="right-sidebar-element align-items-center justify-content-center active">
+                <i class="material-icons">mode_comment</i>
+                <p>comments</p>
+            </div>
+            <div class="right-sidebar-element align-items-center justify-content-center">
+                <i class="material-icons">color_lens</i>
+                <p>brand</p>
+            </div>
+            <div class="right-sidebar-element align-items-center justify-content-center">
+                <i class="material-icons">comment</i>
+                <p>private chats</p>
+            </div>
+            <div class="right-sidebar-element align-items-center justify-content-center">
+                <i class="material-icons">settings</i>
+                <p>settings</p>
+            </div>
+        </div>
+    </main>
+    <script src="https://vjs.zencdn.net/7.10.2/video.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- recommended -->
+    <script src="https://www.WebRTC-Experiment.com/RecordRTC.js"></script>
+    <script>
+    </script>
+</body>
 </html>
