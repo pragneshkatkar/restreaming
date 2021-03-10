@@ -1,10 +1,10 @@
 let express = require('express');
 let app = express();
 let server = require('http').createServer(app);
-let port = process.env.PORT || 3000;
+let port = process.env.PORT || 80;
 server.listen(port);
 let io = require('socket.io')(server);
-let stream = require('./ws/stream');
+let stream = require('./src/ws/stream');
 let path = require('path');
 var spawn = require('child_process').spawn;
 var fs = require('fs');
