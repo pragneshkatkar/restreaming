@@ -25,13 +25,13 @@ app.use(express.static('public'));
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
 app.get('/', (req, res)=>{
-    res.sendFile(__dirname+'/index.html');
+    res.sendFile(__dirname+'/src/index.html');
 });
 app.get('/create-meeting', (req, res)=>{
-    res.sendFile(__dirname+'/create-meeting.html');
+    res.sendFile(__dirname+'/src/create-meeting.html');
 });
 app.get('/join-meeting', (req, res)=>{
-    res.sendFile(__dirname+'/join-meeting.html');
+    res.sendFile(__dirname+'/src/join-meeting.html');
 });
 app.post('/create-meeting-act', urlencodedParser, (req, res) => {
     let meeting_id = req.body.meeting_id;
