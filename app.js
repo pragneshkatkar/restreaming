@@ -22,7 +22,7 @@ var con = mysql.createConnection({
 
 app.use(express.static('public'));
 
-app.use('/src/assets', express.static(path.join(__dirname, 'assets')));
+app.use('/src/assets', express.static(path.join(__dirname, 'src/assets')));
 
 app.get('/', (req, res)=>{
     res.sendFile(__dirname+'/src/index.html');
