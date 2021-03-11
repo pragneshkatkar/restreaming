@@ -55,9 +55,12 @@ export default {
                 video: {
                     frameRate: 24,
                     width: {
-                        min: 480, ideal: 480, max: 480
+                        min: 270, ideal: 270, max: 270
                     },
-                    aspectRatio: 1.6
+                    height: {
+                        min:480, ideal: 480, max: 480,
+                    },
+                    aspectRatio: 0.7
                 }, 
                 audio: {
                     echoCancellation: true

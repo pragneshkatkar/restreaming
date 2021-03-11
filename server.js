@@ -1,8 +1,11 @@
 let express = require('express');
 let app = express();
 let server = require('http').createServer(app);
+require('dotenv').config()
 let port = process.env.PORT || 3000;
-server.listen(port);
+server.listen(port, function(){
+  console.log("Listening to port " + port);
+});
 let io = require('socket.io')(server);
 let stream = require('./src/ws/stream');
 let path = require('path');
@@ -14,7 +17,7 @@ var urlencodedParser = bodyparser.urlencoded({ extended: false });
 var mysql = require('mysql');
 
 var con = mysql.createConnection({
-  host: "http://localhost",
+  host: "http://127.0.0.1",
   user: "root",
   password: "",
   database: 'videocast'
