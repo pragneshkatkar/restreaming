@@ -40,7 +40,7 @@ window.addEventListener('load', () => {
         h.getUserMedia().then((stream) => {
             //save my stream
 
-            document.getElementById('main-video').srcObject = stream;
+            document.getElementById('local-video').srcObject = stream;
             document.getElementById("add-local-video").addEventListener('click', function(){
                 addtomain(stream, username);
             })
@@ -212,7 +212,7 @@ window.addEventListener('load', () => {
 
                     //create a new div for everything
                     let div = document.createElement('div');
-                    div.className = 'videos';
+                    div.className = 'col-lg-2';
                     div.id = partnerName;
                     div.style.position = 'relative';
                     div.appendChild(newVid);

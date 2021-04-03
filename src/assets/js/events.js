@@ -59,10 +59,10 @@ window.addEventListener('load', ()=>{
             document.querySelector('#room-created').innerHTML = `Room successfully created. Click <a href='${roomLink}'>here</a> to enter room. 
                 Share the room link with your partners.`;
             
-            // $("#room-created").load("create-meeting-act", {
-            //     host: yourName,
-            //     meeting_id: rommName
-            // });
+            $("#room-created").load("create-meeting-act", {
+                host: yourName,
+                meeting_id: rommName
+            });
 
             //empty the values
             // document.querySelector('#room-name').value = '';

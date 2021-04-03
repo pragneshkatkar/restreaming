@@ -17,7 +17,7 @@ var urlencodedParser = bodyparser.urlencoded({ extended: false });
 var mysql = require('mysql');
 
 var con = mysql.createConnection({
-  host: "http://127.0.0.1",
+  host: "127.0.0.1",
   user: "root",
   password: "",
   database: 'videocast'
@@ -36,15 +36,18 @@ app.get('/create-meeting', (req, res)=>{
 app.get('/join-meeting', (req, res)=>{
     res.sendFile(__dirname+'/src/join-meeting.html');
 });
+app.get('/meeting-joined', (req, res)=>{
+    res.sendFile(__dirname+'/src/index1.html');
+});
 app.post('/create-meeting-act', urlencodedParser, (req, res) => {
-    let meeting_id = req.body.meeting_id;
-    let host = req.body.host;
-    let sql = "INSERT INTO meetings (meeting_id, host) VALUES ('"+meeting_id+"', '"+host+"')";
-    con.query(sql, function (err, result) {
-      if (err) throw err;
-      console.log("1 record inserted");
-    });
-    console.log(req.body);
+    // let meeting_id = req.body.meeting_id;
+    // let host = req.body.host;
+    // let sql = "INSERT INTO meetings (meeting_id, host) VALUES ('"+meeting_id+"', '"+host+"')";
+    // con.query(sql, function (err, result) {
+    //   if (err) throw err;
+    //   console.log("1 record inserted");
+    // });
+    // console.log(req.body);
 })
 
 
